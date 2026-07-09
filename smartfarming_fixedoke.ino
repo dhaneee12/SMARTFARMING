@@ -87,7 +87,7 @@ void setup() {
   myservo1.attach(servoPin, 1000, 2000);
 
   dht.begin();
-
+  
   WiFi.begin(ssid, password);
   Serial.print("Menghubungkan ke WiFi");
   while (WiFi.status() != WL_CONNECTED) {
@@ -164,9 +164,10 @@ void loop() {
         if (persentase <= 10) {
           pos = 90;
           tone(buzzer, 2000);
+          Firebase.setString(firebaseData, "/output/buzzer", "on");
           delay(1000);
           noTone(buzzer);
-          Firebase.setString(firebaseData, "/output/buzzer", "on");
+          Firebase.setString(firebaseData, "/output/buzzer", "off");
           myservo1.write(pos);
           Firebase.setString(firebaseData, "/output/servo1", "on");
         } else if (persentase >= 100) {
@@ -200,7 +201,7 @@ void loop() {
         Serial.println(" %");
 
         digitalWrite(led2, suhu > 30 ? HIGH : LOW);
-        Firebase.setString(firebaseData, "/output/led1", suhu > 30 ? "on" : "off");
+        Firebase.setString(firebaseData, "/output/led2", suhu > 30 ? "on" : "off");
 
         if (Firebase.setFloat(firebaseData, "/output/suhu", suhu)) {
           Serial.println("-> Suhu berhasil dikirim.");
